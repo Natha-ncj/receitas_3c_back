@@ -2,3 +2,12 @@
 
 GET http://localhost:3000/usuario
 
+###
+
+POST  http://localhost:3000/usuario
+Content-Type: application/json
+
+{
+    "nome": "João",
+    "senha": "1231"
+}
