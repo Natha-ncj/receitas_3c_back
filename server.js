@@ -30,6 +30,12 @@ server.put('/usuario/:id', async (request, reply) => {
     return 'Usuario alterado!'
 })
 
+server.delete('/usuarios/:id', async (request, reply) => {
+    const id = request.params.id
+    const resultado = await sql.query('DELETE FROM usuario where id= $1', [id])
+    reply.status(204)
+})
+
 server.listen({
     port: 3000
 })
