@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS usuario (
 	id serial primary key,
 	nome varchar(255) not null,
+	email varchar(255) not null unique,
 	ativo boolean default true,
 	senha varchar(255) not null,
 	criado_em timestamp default current_timestamp
