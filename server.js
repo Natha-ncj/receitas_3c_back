@@ -1,5 +1,6 @@
 import Fastify from 'fastify'
 import { Pool } from 'pg'
+import cors from '@fastify/cors'
 
 const server = Fastify()
 
@@ -9,6 +10,10 @@ const sql = new Pool({
     host: "localhost",
     port: 5432,
     database: "receitas"
+})
+
+server.register(cors, {
+    origin: '*'
 })
 
 server.get('/usuario', async () => {
@@ -26,9 +31,7 @@ server.post('/usuario', async (request, reply) => {
 
     await sql.query(
         'INSERT INTO usuario (nome, email, senha) VALUES ($1, $2, $3)',
-        [nome, email, senha]
-    )
-
+        [nome, email, senha])
     reply.status(201).send({mensagem: "Usuário criado!"})
 })
 
@@ -68,6 +71,17 @@ server.delete('/usuario/:id', async (request, reply) => {
     )
 
     reply.status(204).send()
+})
+
+server.post('/login', async (request, reply) => {
+    const body = request.body;
+    const resultado = await sql.query('select * from usuario where email = $1 and senha = $2', [body.email, body.senha])
+
+    if (resultado.rows.length === 0) {
+        return reply.status(401).send({error: 'email ou senha inválidos.'})
+    }
+
+    reply.status(200).send({mensagem: "login realizado com sucesso!", ok: true})
 })
 
 server.listen({
